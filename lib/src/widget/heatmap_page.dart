@@ -87,6 +87,10 @@ class HeatMapPage extends StatelessWidget {
   /// Default to 7 (the week starts wih Sunday).
   final int weekStartsWith;
 
+  final bool? showWeekText;
+
+  final bool? showMonthText;
+
   HeatMapPage({
     Key? key,
     required this.colorMode,
@@ -104,6 +108,8 @@ class HeatMapPage extends StatelessWidget {
     this.margin,
     this.showText,
     this.weekStartsWith = 7,
+    this.showWeekText = true,
+    this.showMonthText = true,
   })  : _dateDifferent = endDate.difference(startDate).inDays,
         maxValue = DatasetsUtil.getMaxValue(datasets),
         super(key: key);
@@ -126,9 +132,8 @@ class HeatMapPage extends StatelessWidget {
         // which is used to show the 12 month labels.
         _localizedWeekDayLabels.add('');
         for (var i = 0; i < 7; i++) {
-          _localizedWeekDayLabels.add(
-              DateFormat.E(Localizations.localeOf(context).languageCode)
-                  .format(DateUtil.changeDay(firstDay, i)));
+          _localizedWeekDayLabels.add(DateFormat.E(Localizations.localeOf(context).languageCode)
+              .format(DateUtil.changeDay(firstDay, i)));
         }
       }
 
@@ -141,9 +146,8 @@ class HeatMapPage extends StatelessWidget {
           // To make empty space to future day, we have to pass this HeatMapPage's
           // endDate to HeatMapColumn's endDate.
           startDate: firstDay,
-          endDate: datePos <= _dateDifferent - 7
-              ? DateUtil.changeDay(startDate, datePos + 6)
-              : endDate,
+          endDate:
+              datePos <= _dateDifferent - 7 ? DateUtil.changeDay(startDate, datePos + 6) : endDate,
           weekStartsWith: weekStartsWith,
           colorMode: colorMode,
           numDays: numDays,
@@ -161,9 +165,8 @@ class HeatMapPage extends StatelessWidget {
         ));
 
         // also add first day's month information to _firstDayInfos list.
-        _firstDayInfos.add(
-            DateFormat.MMM(Localizations.localeOf(context).languageCode)
-                .format(firstDay));
+        _firstDayInfos
+            .add(DateFormat.MMM(Localizations.localeOf(context).languageCode).format(firstDay));
       }
     }
 
@@ -176,24 +179,26 @@ class HeatMapPage extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         // Show week labels to left side of heatmap.
-        HeatMapWeekText(
-          margin: margin,
-          fontSize: fontSize,
-          size: size,
-          fontColor: labelColor,
-          weekDayLabels: _localizedWeekDayLabels,
-        ),
+        if (this.showWeekText == true)
+          HeatMapWeekText(
+            margin: margin,
+            fontSize: fontSize,
+            size: size,
+            fontColor: labelColor,
+            weekDayLabels: _localizedWeekDayLabels,
+          ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Show month labels to top of heatmap.
-            HeatMapMonthText(
-              firstDayInfos: _firstDayInfos,
-              margin: margin,
-              fontSize: fontSize,
-              fontColor: labelColor,
-              size: size,
-            ),
+            if (this.showMonthText == true)
+              HeatMapMonthText(
+                firstDayInfos: _firstDayInfos,
+                margin: margin,
+                fontSize: fontSize,
+                fontColor: labelColor,
+                size: size,
+              ),
 
             // Heatmap itself.
             Row(

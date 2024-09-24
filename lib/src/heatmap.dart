@@ -95,6 +95,10 @@ class HeatMap extends StatefulWidget {
   /// Default to 7 (the week starts wih Sunday).
   final int weekStartsWith;
 
+  final bool? showWeekText;
+
+  final bool? showMonthText;
+
   const HeatMap({
     Key? key,
     required this.colorsets,
@@ -117,6 +121,8 @@ class HeatMap extends StatefulWidget {
     this.colorTipCount,
     this.colorTipSize,
     this.weekStartsWith = 7,
+    this.showWeekText = true,
+    this.showMonthText = true,
   }) : super(key: key);
 
   @override
@@ -143,8 +149,7 @@ class _HeatMap extends State<HeatMap> {
         // Heatmap Widget.
         _scrollableHeatMap(HeatMapPage(
           endDate: widget.endDate ?? DateTime.now(),
-          startDate: widget.startDate ??
-              DateUtil.oneYearBefore(widget.endDate ?? DateTime.now()),
+          startDate: widget.startDate ?? DateUtil.oneYearBefore(widget.endDate ?? DateTime.now()),
           colorMode: widget.colorMode,
           size: widget.size,
           fontSize: widget.fontSize,
@@ -158,6 +163,8 @@ class _HeatMap extends State<HeatMap> {
           margin: widget.margin,
           showText: widget.showText,
           weekStartsWith: widget.weekStartsWith,
+          showWeekText: widget.showWeekText,
+          showMonthText: widget.showMonthText,
         )),
 
         // Show HeatMapColorTip if showColorTip is true.
