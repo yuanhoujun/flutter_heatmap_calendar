@@ -93,6 +93,10 @@ class HeatMapCalendar extends StatefulWidget {
   /// Default to 7 (the week starts wih Sunday).
   final int weekStartsWith;
 
+  final bool showMonthSelector;
+  final bool showWeekLabel;
+  final bool? showText;
+
   const HeatMapCalendar({
     Key? key,
     required this.colorsets,
@@ -116,6 +120,9 @@ class HeatMapCalendar extends StatefulWidget {
     this.colorTipCount,
     this.colorTipSize,
     this.weekStartsWith = 7,
+    this.showMonthSelector = true,
+    this.showWeekLabel = true,
+    this.showText,
   }) : super(key: key);
 
   @override
@@ -134,15 +141,13 @@ class _HeatMapCalendar extends State<HeatMapCalendar> {
     setState(() {
       // Set _currentDate value to first day of initialized date or
       // today's month if widget.initDate is null.
-      _currentDate =
-          DateUtil.startDayOfMonth(widget.initDate ?? DateTime.now());
+      _currentDate = DateUtil.startDayOfMonth(widget.initDate ?? DateTime.now());
     });
   }
 
   void changeMonth(int direction) {
     setState(() {
-      _currentDate =
-          DateUtil.changeMonth(_currentDate ?? DateTime.now(), direction);
+      _currentDate = DateUtil.changeMonth(_currentDate ?? DateTime.now(), direction);
     });
     if (widget.onMonthChange != null) widget.onMonthChange!(_currentDate!);
   }
@@ -164,8 +169,7 @@ class _HeatMapCalendar extends State<HeatMapCalendar> {
         // Text which shows the current year and month
         if (_currentDate != null)
           Text(
-            DateFormat.yMMMM(Localizations.localeOf(context).languageCode)
-                .format(_currentDate!),
+            DateFormat.yMMMM(Localizations.localeOf(context).languageCode).format(_currentDate!),
             style: TextStyle(
               fontSize: widget.monthFontSize ?? 12,
             ),
@@ -185,12 +189,10 @@ class _HeatMapCalendar extends State<HeatMapCalendar> {
 
   Widget _weekLabel(BuildContext context) {
     if (_localizedWeekDayLabels.isEmpty && _currentDate != null) {
-      final firstWeekDayIndex =
-          -((_currentDate!.weekday - widget.weekStartsWith) % 7);
+      final firstWeekDayIndex = -((_currentDate!.weekday - widget.weekStartsWith) % 7);
       for (var i = firstWeekDayIndex; i < firstWeekDayIndex + 7; i++) {
-        _localizedWeekDayLabels.add(
-            DateFormat.E(Localizations.localeOf(context).languageCode)
-                .format(DateUtil.changeDay(_currentDate!, i)));
+        _localizedWeekDayLabels.add(DateFormat.E(Localizations.localeOf(context).languageCode)
+            .format(DateUtil.changeDay(_currentDate!, i)));
       }
     }
 
@@ -202,9 +204,8 @@ class _HeatMapCalendar extends State<HeatMapCalendar> {
             widget.flexible ?? false,
             false,
             Container(
-              margin: EdgeInsets.only(
-                  left: widget.margin?.left ?? 2,
-                  right: widget.margin?.right ?? 2),
+              margin:
+                  EdgeInsets.only(left: widget.margin?.left ?? 2, right: widget.margin?.right ?? 2),
               width: widget.size ?? 42,
               alignment: Alignment.center,
               child: Text(
@@ -232,13 +233,14 @@ class _HeatMapCalendar extends State<HeatMapCalendar> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          _header(context),
-          _weekLabel(context),
+          widget.showMonthSelector ? _header(context) : SizedBox(),
+          widget.showWeekLabel ? _weekLabel(context) : SizedBox(),
           HeatMapCalendarPage(
             baseDate: _currentDate ?? DateTime.now(),
             colorMode: widget.colorMode,
             flexible: widget.flexible,
             size: widget.size,
+            showText: widget.showText,
             fontSize: widget.fontSize,
             defaultColor: widget.defaultColor,
             textColor: widget.textColor,
