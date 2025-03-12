@@ -132,8 +132,9 @@ class HeatMapPage extends StatelessWidget {
         // which is used to show the 12 month labels.
         _localizedWeekDayLabels.add('');
         for (var i = 0; i < 7; i++) {
-          _localizedWeekDayLabels.add(DateFormat.E(Localizations.localeOf(context).languageCode)
-              .format(DateUtil.changeDay(firstDay, i)));
+          _localizedWeekDayLabels.add(
+              DateFormat.E(Localizations.localeOf(context).languageCode)
+                  .format(DateUtil.changeDay(firstDay, i)));
         }
       }
 
@@ -146,8 +147,9 @@ class HeatMapPage extends StatelessWidget {
           // To make empty space to future day, we have to pass this HeatMapPage's
           // endDate to HeatMapColumn's endDate.
           startDate: firstDay,
-          endDate:
-              datePos <= _dateDifferent - 7 ? DateUtil.changeDay(startDate, datePos + 6) : endDate,
+          endDate: datePos <= _dateDifferent - 7
+              ? DateUtil.changeDay(startDate, datePos + 6)
+              : endDate,
           weekStartsWith: weekStartsWith,
           colorMode: colorMode,
           numDays: numDays,
@@ -165,8 +167,9 @@ class HeatMapPage extends StatelessWidget {
         ));
 
         // also add first day's month information to _firstDayInfos list.
-        _firstDayInfos
-            .add(DateFormat.MMM(Localizations.localeOf(context).languageCode).format(firstDay));
+        _firstDayInfos.add(
+            DateFormat.MMM(Localizations.localeOf(context).languageCode)
+                .format(firstDay));
       }
     }
 
@@ -190,8 +193,12 @@ class HeatMapPage extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Show month labels to top of heatmap.
-            if (this.showMonthText == true)
+            // Heatmap itself.
+            Row(
+              children: <Widget>[..._heatmapColumnList(context)],
+            ),
+            // Show month labels to bottom of heatmap.
+            if (showMonthText == true)
               HeatMapMonthText(
                 firstDayInfos: _firstDayInfos,
                 margin: margin,
@@ -199,11 +206,6 @@ class HeatMapPage extends StatelessWidget {
                 fontColor: labelColor,
                 size: size,
               ),
-
-            // Heatmap itself.
-            Row(
-              children: <Widget>[..._heatmapColumnList(context)],
-            ),
           ],
         ),
       ],

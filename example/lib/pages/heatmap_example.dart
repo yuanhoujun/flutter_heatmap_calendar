@@ -44,6 +44,11 @@ class _HeatMapExample extends State<HeatMapExample> {
 
   @override
   Widget build(BuildContext context) {
+    // 获取今年第一天时间
+    final now = DateTime.now();
+    final startDate = DateTime(now.year, 1, 1);
+    final endDate = now;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Heatmap'),
@@ -59,11 +64,17 @@ class _HeatMapExample extends State<HeatMapExample> {
                   padding: const EdgeInsets.all(20),
                   child: HeatMap(
                     scrollable: true,
-                    showText: true,
-                    weekStartsWith: 6,
+                    showText: false,
+                    // weekStartsWith: 6,
+                    showWeekText: false,
+                    showColorTip: false,
                     colorMode:
                         isOpacityMode ? ColorMode.opacity : ColorMode.color,
                     datasets: heatMapDatasets,
+                    startDate: startDate,
+                    endDate: now,
+                    margin: const EdgeInsets.all(5),
+                    size: 18,
                     colorsets: const {
                       1: Colors.red,
                       3: Colors.orange,
