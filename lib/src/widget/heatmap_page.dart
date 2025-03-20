@@ -121,7 +121,7 @@ class HeatMapPage extends StatelessWidget {
 
     // Set cursor(position) to first day of weeks
     // until cursor reaches the final week.
-    for (int datePos = 0;
+    for (int datePos = -((startDate.weekday - weekStartsWith) % 7);
         datePos <= _dateDifferent;
         datePos += 7) {
       // Get first day of week by adding cursor's value to startDate.
@@ -167,9 +167,12 @@ class HeatMapPage extends StatelessWidget {
         ));
 
         // also add first day's month information to _firstDayInfos list.
-        _firstDayInfos.add(
-            DateFormat.MMM(Localizations.localeOf(context).languageCode)
-                .format(firstDay));
+        if (firstDay.compareTo(startDate) >= 0 &&
+            firstDay.compareTo(endDate) <= 0) {
+          _firstDayInfos.add(
+              DateFormat.MMM(Localizations.localeOf(context).languageCode)
+                  .format(firstDay));
+        }
       }
     }
 
@@ -182,7 +185,7 @@ class HeatMapPage extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         // Show week labels to left side of heatmap.
-        if (this.showWeekText == true)
+        if (showWeekText == true)
           HeatMapWeekText(
             margin: margin,
             fontSize: fontSize,
